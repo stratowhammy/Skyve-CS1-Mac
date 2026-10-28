@@ -1,0 +1,34 @@
+# Build output directories
+bin/
+obj/
+[Bb]in/
+[Oo]bj/
+dist/
+Publish/
+Publish_*/
+
+# Mac OS metadata
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Visual Studio / Rider / IDE files
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# NuGet
+packages/
+*.nupkg
+
+# Temporary files & Logs
+*.tmp
+*.bak
+*.log
+SkyveApp*.log

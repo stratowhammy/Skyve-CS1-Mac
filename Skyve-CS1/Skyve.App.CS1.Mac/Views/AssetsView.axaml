@@ -1,0 +1,59 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Skyve.App.CS1.Mac.ViewModels"
+             x:Class="Skyve.App.CS1.Mac.Views.AssetsView"
+             x:DataType="vm:AssetsViewModel">
+
+    <Grid RowDefinitions="Auto,*" Margin="24">
+        <!-- Control Header -->
+        <Border Grid.Row="0" Background="#21252B" CornerRadius="8" Padding="16" Margin="0,0,0,16" BorderBrush="#282C34" BorderThickness="1">
+            <Grid ColumnDefinitions="*,Auto">
+                <!-- Search Box -->
+                <TextBox Grid.Column="0" Text="{Binding SearchText, Mode=TwoWay}" Watermark="Search assets by name or ID..." 
+                         Padding="12,8" Margin="0,0,16,0" VerticalAlignment="Center" />
+
+                <!-- Bulk Actions -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <Button Content="Include All" Click="OnIncludeAllClick" Padding="10,6" />
+                    <Button Content="Exclude All" Click="OnExcludeAllClick" Padding="10,6" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Asset List -->
+        <Border Grid.Row="1" Background="#21252B" CornerRadius="8" Padding="12" BorderBrush="#282C34" BorderThickness="1">
+            <ListBox ItemsSource="{Binding FilteredAssets}" Background="Transparent">
+                <ListBox.ItemTemplate>
+                    <DataTemplate x:DataType="vm:AssetItemViewModel">
+                        <Border Padding="12" Margin="0,3" Background="#282C34" CornerRadius="6">
+                            <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto">
+                                <!-- Name and Size -->
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
+                                    <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="SemiBold" Foreground="#E5E5E5" />
+                                    <TextBlock Text="{Binding FilePath}" FontSize="11" Foreground="#5C6370" TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+
+                                <!-- Size Badge -->
+                                <Border Grid.Column="1" Background="#3E4451" CornerRadius="4" Padding="6,2" VerticalAlignment="Center" Margin="12,0">
+                                    <TextBlock Text="{Binding FileSize}" FontSize="11" Foreground="#D19A66" />
+                                </Border>
+
+                                <!-- Included Toggle -->
+                                <CheckBox Grid.Column="2" IsChecked="{Binding IsIncluded, Mode=TwoWay}" 
+                                          Content="Included" Margin="12,0" VerticalAlignment="Center" />
+
+                                <!-- Workshop Button -->
+                                <Button Grid.Column="3" Content="Workshop" Click="OnWorkshopClick" Tag="{Binding}" 
+                                        Padding="8,4" Margin="6,0" VerticalAlignment="Center" />
+
+                                <!-- Reveal in Finder -->
+                                <Button Grid.Column="4" Content="Finder" Click="OnRevealClick" Tag="{Binding}" 
+                                        Padding="8,4" Margin="6,0" VerticalAlignment="Center" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Border>
+    </Grid>
+</UserControl>

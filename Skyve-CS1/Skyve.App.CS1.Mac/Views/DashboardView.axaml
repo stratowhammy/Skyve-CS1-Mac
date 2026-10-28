@@ -1,0 +1,98 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Skyve.App.CS1.Mac.ViewModels"
+             x:Class="Skyve.App.CS1.Mac.Views.DashboardView"
+             x:DataType="vm:DashboardViewModel">
+
+    <ScrollViewer Margin="24">
+        <StackPanel Spacing="24">
+            <!-- Header Banner -->
+            <Border Background="#21252B" CornerRadius="12" Padding="24" BorderBrush="#282C34" BorderThickness="1">
+                <Grid ColumnDefinitions="*,Auto">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="CITIES: SKYLINES (CS1) - MACOS PORT" FontSize="11" FontWeight="Bold" Foreground="#61AFEF" LetterSpacing="1" />
+                        <TextBlock Text="Welcome to Skyve Mac" FontSize="26" FontWeight="SemiBold" Foreground="#ABB2BF" />
+                        <TextBlock Text="Manage playsets, load orders, and compatibility natively on macOS Apple Silicon and Intel." FontSize="14" Foreground="#7F848E" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="4">
+                        <TextBlock Text="Active Playset" FontSize="12" Foreground="#7F848E" HorizontalAlignment="Right" />
+                        <TextBlock Text="{Binding ActivePlaysetName}" FontSize="20" FontWeight="Bold" Foreground="#98C379" HorizontalAlignment="Right" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Quick Stats 4-Card Grid -->
+            <Grid ColumnDefinitions="*,16,*,16,*,16,*">
+                <!-- Total Mods -->
+                <Border Grid.Column="0" Background="#21252B" CornerRadius="8" Padding="16" BorderBrush="#282C34" BorderThickness="1">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Total Mods" FontSize="12" Foreground="#7F848E" />
+                        <TextBlock Text="{Binding TotalModsCount}" FontSize="28" FontWeight="Bold" Foreground="#61AFEF" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Total Assets -->
+                <Border Grid.Column="2" Background="#21252B" CornerRadius="8" Padding="16" BorderBrush="#282C34" BorderThickness="1">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Total Assets" FontSize="12" Foreground="#7F848E" />
+                        <TextBlock Text="{Binding TotalAssetsCount}" FontSize="28" FontWeight="Bold" Foreground="#D19A66" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Active Playset Mods -->
+                <Border Grid.Column="4" Background="#21252B" CornerRadius="8" Padding="16" BorderBrush="#282C34" BorderThickness="1">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Playsets Available" FontSize="12" Foreground="#7F848E" />
+                        <TextBlock Text="{Binding Playsets.Count}" FontSize="28" FontWeight="Bold" Foreground="#C678DD" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Compatibility Issues -->
+                <Border Grid.Column="6" Background="#21252B" CornerRadius="8" Padding="16" BorderBrush="#282C34" BorderThickness="1">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Health Status" FontSize="12" Foreground="#7F848E" />
+                        <TextBlock Text="Verified" FontSize="28" FontWeight="Bold" Foreground="#98C379" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- Playset Selection Section -->
+            <Border Background="#21252B" CornerRadius="8" Padding="20" BorderBrush="#282C34" BorderThickness="1">
+                <StackPanel Spacing="16">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBlock Text="Available Playsets" FontSize="18" FontWeight="SemiBold" Foreground="#ABB2BF" />
+                        <Button Grid.Column="1" Content="Refresh Playsets" Click="OnRefreshClick" Padding="12,6" />
+                    </Grid>
+
+                    <ListBox ItemsSource="{Binding Playsets}" SelectedItem="{Binding SelectedPlayset}" Background="Transparent">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="vm:PlaysetItemViewModel">
+                                <Border Padding="12" Margin="0,4" Background="#282C34" CornerRadius="6">
+                                    <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                                        <!-- Active indicator -->
+                                        <Border Grid.Column="0" Width="8" Height="8" CornerRadius="4" 
+                                                Background="{Binding IsActive, Converter={x:Null}}" 
+                                                Margin="0,0,12,0" VerticalAlignment="Center" />
+
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Name}" FontSize="15" FontWeight="SemiBold" Foreground="#E5E5E5" />
+                                            <TextBlock Text="{Binding Playset.Date, StringFormat='Last Modified: {0:yyyy-MM-dd}'}" FontSize="12" Foreground="#7F848E" />
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="16" Margin="16,0" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding ModCount, StringFormat='{}{0} Mods'}" FontSize="13" Foreground="#61AFEF" />
+                                            <TextBlock Text="{Binding AssetCount, StringFormat='{}{0} Assets'}" FontSize="13" Foreground="#D19A66" />
+                                        </StackPanel>
+
+                                        <Button Grid.Column="3" Content="Activate" Click="OnActivatePlaysetClick" 
+                                                Tag="{Binding}" Padding="10,4" VerticalAlignment="Center" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

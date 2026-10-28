@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk" DefaultTargets="Build;Publish">
+	<Import Project="../../Skyve/Config.props" />
+	<Import Project="../../Extensions/Extensions.Sql/Extensions.Sql.projitems" Label="Shared" />
+	<PropertyGroup>
+		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
+		<DefineConstants>$(DefineConstants);SkyveApp</DefineConstants>
+		<Deterministic>true</Deterministic>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<SignAssembly>True</SignAssembly>
+		<NeutralLanguage>en</NeutralLanguage>
+	</PropertyGroup>
+	<ItemGroup>
+	    <ProjectReference Include="..\..\Extensions\Extensions\Extensions.csproj" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+	</ItemGroup>
+</Project>

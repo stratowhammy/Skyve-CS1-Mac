@@ -1,0 +1,38 @@
+<Project>
+	<PropertyGroup>
+		<Company>T. D. W.</Company>
+		<Copyright>@2026 MIT license</Copyright>
+		<Product>Skyve App</Product>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<Configurations>Debug;Release;Stable</Configurations>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<IsGameAssembly Condition="'$(MSBuildProjectName)' == 'SkyveIPatch' or '$(MSBuildProjectName)' == 'SkyveMod' or '$(MSBuildProjectName)' == 'SkyveInjections' or '$(TargetFramework)' == 'net35'">true</IsGameAssembly>
+		<TargetFramework Condition="'$(IsGameAssembly)' != 'true' and ('$(TargetFramework)' == '' or '$(TargetFramework)' == 'net4.7.2' or '$(TargetFramework)' == 'net4.8')">net8.0</TargetFramework>
+		<OutputPath>bin\$(Configuration)</OutputPath>
+		<OutDir>bin\$(Configuration)</OutDir>
+		<PublishDir>bin\Publish_$(Configuration)</PublishDir>
+		<DefineConstants Condition="'$(IsGameAssembly)' != 'true'">$(DefineConstants);CS1;SkyveApp</DefineConstants>
+		<DefineConstants Condition="'$(IsGameAssembly)' == 'true'">$(DefineConstants);CS1</DefineConstants>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+		<DefineConstants>$(DefineConstants);DEBUG;</DefineConstants>
+		<DebugType>full</DebugType>
+		<Optimize>false</Optimize>
+		<DebugSymbols>true</DebugSymbols>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+		<DebugType>pdbonly</DebugType>
+		<Optimize>true</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Stable'">
+		<DefineConstants>$(DefineConstants);STABLE</DefineConstants>
+		<DebugType>none</DebugType>
+		<Optimize>true</Optimize>
+	</PropertyGroup>
+</Project>

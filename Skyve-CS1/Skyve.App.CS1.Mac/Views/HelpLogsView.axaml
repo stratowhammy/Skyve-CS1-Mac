@@ -1,0 +1,119 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Skyve.App.CS1.Mac.ViewModels"
+             x:Class="Skyve.App.CS1.Mac.Views.HelpLogsView"
+             x:DataType="vm:HelpLogsViewModel">
+
+    <ScrollViewer Margin="24">
+        <StackPanel Spacing="24">
+            <!-- Mac Doorstop & Patch Loader Health Section -->
+            <Border Background="#21252B" CornerRadius="8" Padding="20" BorderBrush="#282C34" BorderThickness="1">
+                <StackPanel Spacing="16">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="MACOS RUNTIME CONFIGURATION" FontSize="11" FontWeight="Bold" Foreground="#61AFEF" LetterSpacing="1" />
+                            <TextBlock Text="Mac Doorstop &amp; Patch Loader Service" FontSize="18" FontWeight="SemiBold" Foreground="#E5E5E5" />
+                            <TextBlock Text="Bypasses Paradox Launcher bypass issues, configures SYSTEM_VERSION_COMPAT=1, and removes Gatekeeper quarantine." FontSize="13" Foreground="#7F848E" />
+                        </StackPanel>
+                        <Button Grid.Column="1" Content="Fix All &amp; Repair Mac Loader" Click="OnFixLoaderClick" 
+                                Background="#98C379" Foreground="#1E1E1E" FontWeight="Bold" Padding="14,10" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <!-- Status Banner if any -->
+                    <Border Background="#282C34" CornerRadius="6" Padding="12" IsVisible="{Binding PatchStatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                        <TextBlock Text="{Binding PatchStatusMessage}" Foreground="#61AFEF" TextWrapping="Wrap" />
+                    </Border>
+
+                    <!-- Checklist -->
+                    <Grid ColumnDefinitions="*,16,*,16,*">
+                        <!-- Patch Loader Mod -->
+                        <Border Grid.Column="0" Background="#282C34" CornerRadius="6" Padding="12">
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="Patch Loader Mod" FontSize="12" Foreground="#7F848E" />
+                                <TextBlock Text="{Binding IsPatchLoaderModInstalled, Converter={x:Null}, StringFormat='Installed: {0}'}" 
+                                           FontWeight="SemiBold" Foreground="{Binding IsPatchLoaderModInstalled, Converter={x:Null}}" />
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Doorstop Dylib -->
+                        <Border Grid.Column="2" Background="#282C34" CornerRadius="6" Padding="12">
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="Doorstop Dylib" FontSize="12" Foreground="#7F848E" />
+                                <TextBlock Text="{Binding IsDoorstopInstalled, StringFormat='Present: {0}'}" 
+                                           FontWeight="SemiBold" Foreground="{Binding IsDoorstopInstalled, Converter={x:Null}}" />
+                            </StackPanel>
+                        </Border>
+
+                        <!-- SYSTEM_VERSION_COMPAT -->
+                        <Border Grid.Column="4" Background="#282C34" CornerRadius="6" Padding="12">
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="macOS Mono Bug Fix" FontSize="12" Foreground="#7F848E" />
+                                <TextBlock Text="{Binding IsSystemVersionCompatConfigured, StringFormat='SYSTEM_VERSION_COMPAT: {0}'}" 
+                                           FontWeight="SemiBold" Foreground="{Binding IsSystemVersionCompatConfigured, Converter={x:Null}}" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Logs & Diagnostics Section -->
+            <Border Background="#21252B" CornerRadius="8" Padding="20" BorderBrush="#282C34" BorderThickness="1">
+                <StackPanel Spacing="16">
+                    <Grid ColumnDefinitions="*,Auto,Auto">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="UNITY PLAYER.LOG VIEWER" FontSize="11" FontWeight="Bold" Foreground="#98C379" LetterSpacing="1" />
+                            <TextBlock Text="In-Game Diagnostics (~/Library/Logs/Unity/Player.log)" FontSize="18" FontWeight="SemiBold" Foreground="#E5E5E5" />
+                        </StackPanel>
+
+                        <Button Grid.Column="1" Content="Export Logs (ZIP)" Click="OnExportZipClick" Padding="12,8" Margin="0,0,8,0" VerticalAlignment="Center" />
+                        <Button Grid.Column="2" Content="Refresh Log" Click="OnRefreshLogClick" Padding="12,8" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <!-- Log View Area -->
+                    <Border Background="#1E1E1E" CornerRadius="6" Padding="12" Height="220" BorderBrush="#282C34" BorderThickness="1">
+                        <ScrollViewer>
+                            <TextBox Text="{Binding PlayerLogExcerpt}" IsReadOnly="True" AcceptsReturn="True" 
+                                     FontFamily="Menlo, Monaco, 'Courier New', monospace" FontSize="11" 
+                                     Background="Transparent" BorderThickness="0" Foreground="#ABB2BF" />
+                        </ScrollViewer>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <!-- Folder Paths Section -->
+            <Border Background="#21252B" CornerRadius="8" Padding="20" BorderBrush="#282C34" BorderThickness="1">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="RESOLVED MACOS FILESYSTEM PATHS" FontSize="11" FontWeight="Bold" Foreground="#C678DD" LetterSpacing="1" />
+
+                    <!-- Game Path -->
+                    <Grid ColumnDefinitions="140,*,Auto">
+                        <TextBlock Grid.Column="0" Text="Game Path:" Foreground="#7F848E" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="1" Text="{Binding GamePath}" Foreground="#E5E5E5" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                        <Button Grid.Column="2" Content="Open in Finder" Click="OnOpenFolderClick" Tag="{Binding GamePath}" Padding="8,4" />
+                    </Grid>
+
+                    <!-- AppData Path -->
+                    <Grid ColumnDefinitions="140,*,Auto">
+                        <TextBlock Grid.Column="0" Text="Colossal Order User:" Foreground="#7F848E" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="1" Text="{Binding AppDataPath}" Foreground="#E5E5E5" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                        <Button Grid.Column="2" Content="Open in Finder" Click="OnOpenFolderClick" Tag="{Binding AppDataPath}" Padding="8,4" />
+                    </Grid>
+
+                    <!-- Steam Path -->
+                    <Grid ColumnDefinitions="140,*,Auto">
+                        <TextBlock Grid.Column="0" Text="Steam Path:" Foreground="#7F848E" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="1" Text="{Binding SteamPath}" Foreground="#E5E5E5" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                        <Button Grid.Column="2" Content="Open in Finder" Click="OnOpenFolderClick" Tag="{Binding SteamPath}" Padding="8,4" />
+                    </Grid>
+
+                    <!-- Workshop Path -->
+                    <Grid ColumnDefinitions="140,*,Auto">
+                        <TextBlock Grid.Column="0" Text="Workshop Content:" Foreground="#7F848E" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="1" Text="{Binding WorkshopPath}" Foreground="#E5E5E5" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                        <Button Grid.Column="2" Content="Open in Finder" Click="OnOpenFolderClick" Tag="{Binding WorkshopPath}" Padding="8,4" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

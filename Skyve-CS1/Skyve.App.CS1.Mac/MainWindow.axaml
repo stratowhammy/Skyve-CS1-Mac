@@ -1,0 +1,73 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Skyve.App.CS1.Mac.ViewModels"
+        xmlns:views="using:Skyve.App.CS1.Mac.Views"
+        x:Class="Skyve.App.CS1.Mac.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Title="Skyve - Cities: Skylines (macOS Native)"
+        Width="1200" Height="800"
+        MinWidth="960" MinHeight="640"
+        Background="#1E1E1E"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.DataTemplates>
+        <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
+            <views:DashboardView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ModsViewModel}">
+            <views:ModsView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:AssetsViewModel}">
+            <views:AssetsView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:CompatibilityViewModel}">
+            <views:CompatibilityView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:HelpLogsViewModel}">
+            <views:HelpLogsView />
+        </DataTemplate>
+    </Window.DataTemplates>
+
+    <Grid ColumnDefinitions="240,*">
+        <!-- Sidebar Navigation -->
+        <Border Grid.Column="0" Background="#1E2227" BorderBrush="#282C34" BorderThickness="0,0,1,0" Padding="16">
+            <Grid RowDefinitions="Auto,*,Auto">
+                <!-- App Branding -->
+                <StackPanel Grid.Row="0" Spacing="4" Margin="0,8,0,24">
+                    <TextBlock Text="SKYVE" FontSize="22" FontWeight="Black" Foreground="#61AFEF" LetterSpacing="2" />
+                    <TextBlock Text="Cities: Skylines Mod Manager (macOS)" FontSize="11" Foreground="#5C6370" />
+                </StackPanel>
+
+                <!-- Navigation Tabs -->
+                <StackPanel Grid.Row="1" Spacing="6">
+                    <Button Content="🎮  Dashboard" Click="OnNavClick" Tag="Dashboard" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="14,10" Background="Transparent" Foreground="#ABB2BF" />
+                    <Button Content="📦  Mods" Click="OnNavClick" Tag="Mods" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="14,10" Background="Transparent" Foreground="#ABB2BF" />
+                    <Button Content="🎨  Assets" Click="OnNavClick" Tag="Assets" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="14,10" Background="Transparent" Foreground="#ABB2BF" />
+                    <Button Content="🛡️  Compatibility" Click="OnNavClick" Tag="Compatibility" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="14,10" Background="Transparent" Foreground="#ABB2BF" />
+                    <Button Content="🛠️  Help &amp; Mac Setup" Click="OnNavClick" Tag="HelpLogs" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="14,10" Background="Transparent" Foreground="#ABB2BF" />
+                </StackPanel>
+
+                <!-- Game Status & Launch Controls -->
+                <Border Grid.Row="2" Background="#21252B" CornerRadius="8" Padding="14" BorderBrush="#282C34" BorderThickness="1">
+                    <StackPanel Spacing="10">
+                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                            <Border Width="8" Height="8" CornerRadius="4" Background="{Binding GameStatusColor}" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding GameStatusText}" FontSize="12" FontWeight="SemiBold" Foreground="#ABB2BF" VerticalAlignment="Center" />
+                        </StackPanel>
+
+                        <Button Content="Launch Cities: Skylines" Click="OnLaunchClick" IsVisible="{Binding CanLaunch}"
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                Background="#98C379" Foreground="#1E1E1E" FontWeight="Bold" Padding="12,10" />
+
+                        <Button Content="Stop Game" Click="OnStopClick" IsVisible="{Binding IsGameRunning}"
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                Background="#E06C75" Foreground="#1E1E1E" FontWeight="Bold" Padding="12,10" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Main Content Area -->
+        <ContentControl Grid.Column="1" Content="{Binding CurrentView}" Background="#181A1F" />
+    </Grid>
+</Window>

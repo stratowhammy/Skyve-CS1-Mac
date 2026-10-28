@@ -1,0 +1,7 @@
+<Project>
+  <PropertyGroup>
+    <IsMacOS Condition="'$([MSBuild]::IsOSPlatform(&quot;OSX&quot;))' == 'true'">true</IsMacOS>
+    <DefineConstants Condition="'$(IsMacOS)' == 'true'">$(DefineConstants);MACOS;OSX</DefineConstants>
+    <FrameworkPathOverride Condition="'$(IsMacOS)' == 'true' and Exists('/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/3.5-api')">/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/3.5-api</FrameworkPathOverride>
+  </PropertyGroup>
+</Project>
