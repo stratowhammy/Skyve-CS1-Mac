@@ -39,53 +39,136 @@
                     </StackPanel>
                 </Border>
 
-                <!-- Active Playset Mods -->
+                <!-- Active Included Items -->
                 <Border Grid.Column="4" Background="#21252B" CornerRadius="8" Padding="16" BorderBrush="#282C34" BorderThickness="1">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Included Items" FontSize="12" Foreground="#7F848E" />
+                        <TextBlock Text="{Binding TotalIncludedCount}" FontSize="28" FontWeight="Bold" Foreground="#98C379" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Playsets Available -->
+                <Border Grid.Column="6" Background="#21252B" CornerRadius="8" Padding="16" BorderBrush="#282C34" BorderThickness="1">
                     <StackPanel Spacing="4">
                         <TextBlock Text="Playsets Available" FontSize="12" Foreground="#7F848E" />
                         <TextBlock Text="{Binding Playsets.Count}" FontSize="28" FontWeight="Bold" Foreground="#C678DD" />
                     </StackPanel>
                 </Border>
-
-                <!-- Compatibility Issues -->
-                <Border Grid.Column="6" Background="#21252B" CornerRadius="8" Padding="16" BorderBrush="#282C34" BorderThickness="1">
-                    <StackPanel Spacing="4">
-                        <TextBlock Text="Health Status" FontSize="12" Foreground="#7F848E" />
-                        <TextBlock Text="Verified" FontSize="28" FontWeight="Bold" Foreground="#98C379" />
-                    </StackPanel>
-                </Border>
             </Grid>
 
-            <!-- Playset Selection Section -->
+            <!-- Playset Management Section -->
             <Border Background="#21252B" CornerRadius="8" Padding="20" BorderBrush="#282C34" BorderThickness="1">
                 <StackPanel Spacing="16">
-                    <Grid ColumnDefinitions="*,Auto">
-                        <TextBlock Text="Available Playsets" FontSize="18" FontWeight="SemiBold" Foreground="#ABB2BF" />
-                        <Button Grid.Column="1" Content="Refresh Playsets" Click="OnRefreshClick" Padding="12,6" />
+                    <!-- Playset Header & Action Buttons -->
+                    <Grid ColumnDefinitions="*,Auto,Auto,Auto">
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Available Playsets" FontSize="18" FontWeight="SemiBold" Foreground="#ABB2BF" />
+                            <TextBlock Text="Save, duplicate, and switch between your mod/asset loadouts" FontSize="12" Foreground="#5C6370" />
+                        </StackPanel>
+
+                        <!-- Primary Action: Save Current Selection -->
+                        <Button Grid.Column="1" Content="💾  Save Selection as Playset" Click="OnSaveCurrentPlaysetClick" 
+                                Background="#98C379" Foreground="#1E1E1E" FontWeight="Bold" Padding="14,8" Margin="0,0,8,0" />
+
+                        <!-- Secondary Action: Create Empty Playset -->
+                        <Button Grid.Column="2" Content="➕  New Empty" Click="OnNewEmptyPlaysetClick" 
+                                Background="#282C34" Foreground="#ABB2BF" Padding="12,8" Margin="0,0,8,0" />
+
+                        <!-- Refresh -->
+                        <Button Grid.Column="3" Content="🔄  Refresh" Click="OnRefreshClick" 
+                                Background="#282C34" Foreground="#ABB2BF" Padding="12,8" />
                     </Grid>
 
+                    <!-- Status Notification Banner -->
+                    <Border IsVisible="{Binding HasStatusMessage}" Background="#1E2227" BorderBrush="{Binding StatusMessageColor}" 
+                            BorderThickness="1" CornerRadius="6" Padding="12,10">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock Grid.Column="0" Text="{Binding StatusMessage}" Foreground="{Binding StatusMessageColor}" 
+                                       FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" />
+                            <Button Grid.Column="1" Content="Dismiss" Click="OnDismissStatusClick" 
+                                    Background="Transparent" Foreground="#7F848E" Padding="8,2" />
+                        </Grid>
+                    </Border>
+
+                    <!-- Inline Create / Save Playset Card -->
+                    <Border IsVisible="{Binding IsCreatingPlayset}" Background="#1E2227" BorderBrush="#61AFEF" 
+                            BorderThickness="1.5" CornerRadius="8" Padding="18">
+                        <StackPanel Spacing="12">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <TextBlock Grid.Column="0" Text="{Binding CreateDialogTitle}" FontSize="15" FontWeight="Bold" Foreground="#61AFEF" />
+                                <Button Grid.Column="1" Content="✕" Click="OnCancelCreateClick" Background="Transparent" Foreground="#7F848E" Padding="6,2" />
+                            </Grid>
+
+                            <TextBlock Text="{Binding CreateDialogDescription}" FontSize="12" Foreground="#ABB2BF" />
+
+                            <Grid ColumnDefinitions="*,Auto,Auto">
+                                <TextBox Grid.Column="0" Text="{Binding NewPlaysetName, Mode=TwoWay}" 
+                                         Watermark="Enter playset name (e.g. Detailing, Vanilla+, Light Mods)..."
+                                         Padding="12,8" Margin="0,0,10,0" KeyDown="OnPlaysetNameKeyDown" />
+                                <Button Grid.Column="1" Content="Save Playset" Click="OnConfirmSavePlaysetClick" 
+                                        Background="#98C379" Foreground="#1E1E1E" FontWeight="Bold" Padding="16,8" Margin="0,0,8,0" />
+                                <Button Grid.Column="2" Content="Cancel" Click="OnCancelCreateClick" 
+                                        Background="#282C34" Foreground="#ABB2BF" Padding="12,8" />
+                            </Grid>
+
+                            <Border Background="#282C34" CornerRadius="6" Padding="12,8">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="ℹ️" />
+                                    <TextBlock Text="{Binding IncludedSummaryText}" FontSize="12" Foreground="#98C379" />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Playset List -->
                     <ListBox ItemsSource="{Binding Playsets}" SelectedItem="{Binding SelectedPlayset}" Background="Transparent">
                         <ListBox.ItemTemplate>
                             <DataTemplate x:DataType="vm:PlaysetItemViewModel">
-                                <Border Padding="12" Margin="0,4" Background="#282C34" CornerRadius="6">
+                                <Border Padding="14,12" Margin="0,4" Background="#282C34" CornerRadius="6" 
+                                        BorderBrush="{Binding CardBorderBrush}" BorderThickness="1">
                                     <Grid ColumnDefinitions="Auto,*,Auto,Auto">
-                                        <!-- Active indicator -->
-                                        <Border Grid.Column="0" Width="8" Height="8" CornerRadius="4" 
-                                                Background="{Binding IsActive, Converter={x:Null}}" 
-                                                Margin="0,0,12,0" VerticalAlignment="Center" />
+                                        <!-- Active indicator dot -->
+                                        <Border Grid.Column="0" Width="10" Height="10" CornerRadius="5" 
+                                                Background="{Binding ActiveIndicatorBrush}" 
+                                                Margin="0,0,14,0" VerticalAlignment="Center" />
 
-                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                            <TextBlock Text="{Binding Name}" FontSize="15" FontWeight="SemiBold" Foreground="#E5E5E5" />
-                                            <TextBlock Text="{Binding Playset.Date, StringFormat='Last Modified: {0:yyyy-MM-dd}'}" FontSize="12" Foreground="#7F848E" />
+                                        <!-- Name & Date -->
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <TextBlock Text="{Binding Name}" FontSize="15" FontWeight="SemiBold" Foreground="#E5E5E5" />
+                                                <Border IsVisible="{Binding IsActive}" Background="#2D4F38" CornerRadius="4" Padding="6,2" VerticalAlignment="Center">
+                                                    <TextBlock Text="ACTIVE" FontSize="10" FontWeight="Bold" Foreground="#98C379" />
+                                                </Border>
+                                                <Border IsVisible="{Binding IsTemporary}" Background="#3E4451" CornerRadius="4" Padding="6,2" VerticalAlignment="Center">
+                                                    <TextBlock Text="UNSAVED / TEMPORARY" FontSize="10" Foreground="#E5C07B" />
+                                                </Border>
+                                            </StackPanel>
+                                            <TextBlock Text="{Binding FormattedDate, StringFormat='Last Modified: {0}'}" FontSize="11" Foreground="#5C6370" />
                                         </StackPanel>
 
+                                        <!-- Item Counts -->
                                         <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="16" Margin="16,0" VerticalAlignment="Center">
-                                            <TextBlock Text="{Binding ModCount, StringFormat='{}{0} Mods'}" FontSize="13" Foreground="#61AFEF" />
-                                            <TextBlock Text="{Binding AssetCount, StringFormat='{}{0} Assets'}" FontSize="13" Foreground="#D19A66" />
+                                            <TextBlock Text="{Binding ModCount, StringFormat='{}{0} Mods'}" FontSize="13" Foreground="#61AFEF" FontWeight="SemiBold" />
+                                            <TextBlock Text="{Binding AssetCount, StringFormat='{}{0} Assets'}" FontSize="13" Foreground="#D19A66" FontWeight="SemiBold" />
                                         </StackPanel>
 
-                                        <Button Grid.Column="3" Content="Activate" Click="OnActivatePlaysetClick" 
-                                                Tag="{Binding}" Padding="10,4" VerticalAlignment="Center" />
+                                        <!-- Actions -->
+                                        <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                            <!-- Activate Button -->
+                                            <Button Content="Activate" Click="OnActivatePlaysetClick" Tag="{Binding}" 
+                                                    IsVisible="{Binding CanActivate}" Padding="12,6" 
+                                                    Background="#61AFEF" Foreground="#1E1E1E" FontWeight="SemiBold" />
+
+                                            <!-- Duplicate Button -->
+                                            <Button Content="Duplicate" Click="OnDuplicatePlaysetClick" Tag="{Binding}" 
+                                                    IsVisible="{Binding IsCustom}" Padding="10,6" 
+                                                    Background="#21252B" Foreground="#ABB2BF" />
+
+                                            <!-- Delete Button -->
+                                            <Button Content="Delete" Click="OnDeletePlaysetClick" Tag="{Binding}" 
+                                                    IsVisible="{Binding CanDelete}" Padding="10,6" 
+                                                    Background="#21252B" Foreground="#E06C75" />
+                                        </StackPanel>
                                     </Grid>
                                 </Border>
                             </DataTemplate>

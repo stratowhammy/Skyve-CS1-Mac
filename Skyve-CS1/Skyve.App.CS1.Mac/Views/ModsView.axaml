@@ -4,7 +4,7 @@
              x:Class="Skyve.App.CS1.Mac.Views.ModsView"
              x:DataType="vm:ModsViewModel">
 
-    <Grid RowDefinitions="Auto,*" Margin="24">
+    <Grid RowDefinitions="Auto,Auto,Auto,*" Margin="24">
         <!-- Control Header -->
         <Border Grid.Row="0" Background="#21252B" CornerRadius="8" Padding="16" Margin="0,0,0,16" BorderBrush="#282C34" BorderThickness="1">
             <Grid ColumnDefinitions="*,Auto,Auto">
@@ -21,16 +21,45 @@
                     <Button Content="Disabled" Click="OnFilterClick" Tag="Disabled" Padding="10,6" />
                 </StackPanel>
 
-                <!-- Bulk Actions -->
+                <!-- Actions: Save to Playset & Bulk Toggles -->
                 <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <Button Content="💾  Save to Playset..." Click="OnOpenSavePlaysetClick" 
+                            Background="#98C379" Foreground="#1E1E1E" FontWeight="Bold" Padding="12,6" />
                     <Button Content="Include All" Click="OnIncludeAllClick" Padding="10,6" />
                     <Button Content="Exclude All" Click="OnExcludeAllClick" Padding="10,6" />
                 </StackPanel>
             </Grid>
         </Border>
 
+        <!-- Status Message Banner -->
+        <Border Grid.Row="1" IsVisible="{Binding HasSaveStatus}" Background="#1E2227" BorderBrush="{Binding SaveStatusColor}" 
+                BorderThickness="1" CornerRadius="6" Padding="12,8" Margin="0,0,0,12">
+            <TextBlock Text="{Binding SaveStatusMessage}" Foreground="{Binding SaveStatusColor}" FontSize="13" FontWeight="SemiBold" />
+        </Border>
+
+        <!-- Inline Save to Playset Panel -->
+        <Border Grid.Row="2" IsVisible="{Binding IsSavingPlayset}" Background="#1E2227" BorderBrush="#98C379" 
+                BorderThickness="1.5" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+            <StackPanel Spacing="10">
+                <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Grid.Column="0" Text="Save Current Selection to New Playset" FontSize="14" FontWeight="Bold" Foreground="#98C379" />
+                    <Button Grid.Column="1" Content="✕" Click="OnCancelSavePlaysetClick" Background="Transparent" Foreground="#7F848E" Padding="6,2" />
+                </Grid>
+                <TextBlock Text="Create a named playset containing your currently selected mods and assets:" FontSize="12" Foreground="#ABB2BF" />
+                <Grid ColumnDefinitions="*,Auto,Auto">
+                    <TextBox Grid.Column="0" Text="{Binding NewPlaysetName, Mode=TwoWay}" 
+                             Watermark="Enter playset name (e.g. Traffic Test, Visual Modpack)..." 
+                             Padding="10,6" Margin="0,0,10,0" KeyDown="OnSavePlaysetKeyDown" />
+                    <Button Grid.Column="1" Content="Save Playset" Click="OnConfirmSavePlaysetClick" 
+                            Background="#98C379" Foreground="#1E1E1E" FontWeight="Bold" Padding="14,6" Margin="0,0,6,0" />
+                    <Button Grid.Column="2" Content="Cancel" Click="OnCancelSavePlaysetClick" 
+                            Background="#282C34" Foreground="#ABB2BF" Padding="10,6" />
+                </Grid>
+            </StackPanel>
+        </Border>
+
         <!-- Mod List -->
-        <Border Grid.Row="1" Background="#21252B" CornerRadius="8" Padding="12" BorderBrush="#282C34" BorderThickness="1">
+        <Border Grid.Row="3" Background="#21252B" CornerRadius="8" Padding="12" BorderBrush="#282C34" BorderThickness="1">
             <ListBox ItemsSource="{Binding FilteredMods}" Background="Transparent">
                 <ListBox.ItemTemplate>
                     <DataTemplate x:DataType="vm:ModItemViewModel">

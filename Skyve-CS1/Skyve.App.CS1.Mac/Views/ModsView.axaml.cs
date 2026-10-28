@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Skyve.App.CS1.Mac.ViewModels;
 
@@ -32,6 +33,42 @@ public partial class ModsView : UserControl
 		if (DataContext is ModsViewModel vm)
 		{
 			vm.ExcludeAll();
+		}
+	}
+
+	private void OnOpenSavePlaysetClick(object? sender, RoutedEventArgs e)
+	{
+		if (DataContext is ModsViewModel vm)
+		{
+			vm.OpenSavePlaysetDialog();
+		}
+	}
+
+	private void OnCancelSavePlaysetClick(object? sender, RoutedEventArgs e)
+	{
+		if (DataContext is ModsViewModel vm)
+		{
+			vm.CancelSavePlayset();
+		}
+	}
+
+	private void OnConfirmSavePlaysetClick(object? sender, RoutedEventArgs e)
+	{
+		if (DataContext is ModsViewModel vm)
+		{
+			vm.ConfirmSavePlayset();
+		}
+	}
+
+	private void OnSavePlaysetKeyDown(object? sender, KeyEventArgs e)
+	{
+		if (e.Key == Key.Enter && DataContext is ModsViewModel vm)
+		{
+			vm.ConfirmSavePlayset();
+		}
+		else if (e.Key == Key.Escape && DataContext is ModsViewModel vm2)
+		{
+			vm2.CancelSavePlayset();
 		}
 	}
 
