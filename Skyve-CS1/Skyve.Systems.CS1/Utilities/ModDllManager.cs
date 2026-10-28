@@ -1,4 +1,4 @@
-﻿using Extensions;
+using Extensions;
 
 using Skyve.Domain.CS1.Utilities;
 using Skyve.Domain.Systems;
@@ -6,6 +6,7 @@ using Skyve.Domain.Systems;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Skyve.Systems.CS1.Utilities;
 
@@ -26,12 +27,21 @@ public class ModDllManager : IModDllManager
 
 		if (cache != null)
 		{
-			foreach (var dll in cache)
+			// Self-healing: If cache has entries but ZERO mods (caused by legacy macOS AssemblyResolver bug), discard the bad cache
+			var hasAnyMod = cache.Any(x => x.IsMod);
+			if (hasAnyMod || cache.Count == 0)
 			{
-				if (dll.Path is not null or "")
+				foreach (var dll in cache)
 				{
-					_dllCache[dll.Path] = dll;
+					if (dll.Path is not null or "")
+					{
+						_dllCache[dll.Path] = dll;
+					}
 				}
+			}
+			else
+			{
+				_logger.Info("Discarding corrupted ModDllCache with 0 mods.");
 			}
 		}
 

@@ -42,6 +42,7 @@ public class HelpLogsViewModel : ViewModelBase
 	public bool IsLoaderScriptPresent => _patchLoaderService.IsLoaderScriptPresent;
 	public bool IsSystemVersionCompatConfigured => _patchLoaderService.IsSystemVersionCompatConfigured;
 	public bool IsLauncherSettingsPatched => _patchLoaderService.IsLauncherSettingsPatched;
+	public bool IsDuplicateWorkshopSkyvePresent => _patchLoaderService.IsDuplicateWorkshopSkyvePresent;
 
 	public string PatchStatusMessage
 	{
@@ -66,6 +67,7 @@ public class HelpLogsViewModel : ViewModelBase
 		OnPropertyChanged(nameof(IsLoaderScriptPresent));
 		OnPropertyChanged(nameof(IsSystemVersionCompatConfigured));
 		OnPropertyChanged(nameof(IsLauncherSettingsPatched));
+		OnPropertyChanged(nameof(IsDuplicateWorkshopSkyvePresent));
 
 		LoadPlayerLog();
 	}

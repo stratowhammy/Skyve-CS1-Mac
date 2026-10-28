@@ -112,7 +112,7 @@ internal class AssemblyUtil
 
 	public bool ImplementsInterface(TypeDefinition type, string fullInterfaceName)
 	{
-		return GetAllInterfaces(type).Any(i => i.FullName == fullInterfaceName);
+		return GetAllInterfaces(type).Any(i => i.FullName == fullInterfaceName || i.Name == "IUserMod");
 	}
 
 	public IEnumerable<TypeReference> GetAllInterfaces(TypeDefinition? type)

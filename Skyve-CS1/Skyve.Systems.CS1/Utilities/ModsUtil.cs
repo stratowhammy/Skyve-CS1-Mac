@@ -1,4 +1,4 @@
-﻿using Extensions;
+using Extensions;
 
 using Skyve.Domain;
 using Skyve.Domain.CS1;
@@ -166,9 +166,7 @@ internal class ModsUtil : IModUtil
 
 			if (files != null && files.Length > 0)
 			{
-				return CrossIO.CurrentPlatform is Platform.MacOSX
-					? _macAssemblyUtil.FindImplementation(files, out dllPath, out version)
-					: _assemblyUtil.FindImplementation(files, out dllPath, out version);
+				return _assemblyUtil.FindImplementation(files, out dllPath, out version);
 			}
 		}
 		catch { }

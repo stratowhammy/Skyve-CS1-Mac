@@ -27,6 +27,10 @@ public class MacPatchLoaderService
 	public string LauncherSettingsPath => CrossIO.Combine(GamePath, "Cities.app", "Contents", "Launcher", "launcher-settings.json");
 	public string LauncherSettingsBackupPath => CrossIO.Combine(GamePath, "Cities.app", "Contents", "Launcher", "launcher-settings.json.bak");
 	public string WorkshopPatchLoaderDll => CrossIO.Combine(_locationManager.WorkshopContentPath, "2041457644", "PatchLoader", "PatchLoader.dll");
+	public string WorkshopSkyveFolder => CrossIO.Combine(_locationManager.WorkshopContentPath, "2881031511");
+	public string WorkshopSkyveIpatch => CrossIO.Combine(WorkshopSkyveFolder, "Skyve-CS1.ipatch");
+
+	public bool IsDuplicateWorkshopSkyvePresent => Directory.Exists(WorkshopSkyveFolder) && CrossIO.FileExists(WorkshopSkyveIpatch);
 
 	public bool IsPatchLoaderModInstalled =>
 		CrossIO.FileExists(WorkshopPatchLoaderDll) ||
@@ -229,6 +233,24 @@ public class MacPatchLoaderService
 		if (Directory.Exists(modFolder))
 		{
 			StripQuarantine(modFolder);
+		}
+
+		if (CrossIO.FileExists(WorkshopSkyveIpatch))
+		{
+			try
+			{
+				var disabledIpatch = CrossIO.Combine(WorkshopSkyveFolder, "Skyve-CS1.ipatch.disabled");
+				if (CrossIO.FileExists(disabledIpatch))
+				{
+					File.Delete(disabledIpatch);
+				}
+				File.Move(WorkshopSkyveIpatch, disabledIpatch);
+				_logger.Info("Disabled duplicate Workshop Skyve-CS1.ipatch to prevent Patch Loader collision.");
+			}
+			catch (Exception ex)
+			{
+				_logger.Exception(ex, "Failed to disable duplicate Workshop Skyve-CS1.ipatch");
+			}
 		}
 
 		if (loaderResult.Success && launcherResult.Success)

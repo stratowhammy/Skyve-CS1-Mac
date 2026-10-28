@@ -67,17 +67,18 @@
       <VersionNumber Include="@(Targets->'%(Version)')" />
     </ItemGroup>
     <PropertyGroup>
-      <DeployDir Condition="'$(DeployDir)'==''">$(LOCALAPPDATA)/Colossal Order/Cities_Skylines/Addons/Mods/$(SolutionName)/</DeployDir>
+      <UserProfile Condition="'$(UserProfile)' == ''">$(HOME)</UserProfile>
+      <DeployDir Condition="'$(DeployDir)'=='' and Exists('$(UserProfile)/Library/Application Support')">$(UserProfile)/Library/Application Support/Colossal Order/Cities_Skylines/Addons/Mods/Skyve/</DeployDir>
+      <DeployDir Condition="'$(DeployDir)'==''">$(LOCALAPPDATA)/Colossal Order/Cities_Skylines/Addons/Mods/Skyve/</DeployDir>
       <Now>$([System.DateTime]::Now.ToString("HH:mm:ss"))</Now>
       <pdb2mdb>$(PkgMono_Unofficial_pdb2mdb)/tools/pdb2mdb.exe</pdb2mdb>
     </PropertyGroup>
 
-	  <RemoveDir Directories="$(DeployDir)" />
+	  <Delete Files="$(DeployDir)$(TargetFileName)" />
 	  <Delete Files="$(TargetPath).mdb" />
     <Exec Command="&quot;$(pdb2mdb)&quot; &quot;$(TargetPath)&quot;" Condition="'$(OS)' == 'Windows_NT' and Exists('$(pdb2mdb)')" />
     <Copy SourceFiles="$(TargetPath).mdb" DestinationFolder="$(DeployDir)" Condition="Exists('$(TargetPath).mdb')" />
 
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(DeployDir)" />
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(DeployDir)" />
     <Message Importance="high" Text="AssemblyVersion=@(VersionNumber) time=$(Now)" />
   </Target>
